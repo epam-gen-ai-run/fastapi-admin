@@ -42,3 +42,9 @@ async def test_enum_parse_value(mock_request):
     enum_widget = Enum(enum=TestEnum, name="test", label="Test")
     result = await enum_widget.parse_value(mock_request, 1)
     assert result == TestEnum.OPTION1
+
+@pytest.mark.asyncio
+async def test_boolean_get_options():
+    boolean_widget = Boolean(name="test", label="Test")
+    options = await boolean_widget.get_options()
+    assert options == [("", ""), ("TRUE", "true"), ("FALSE", "false")]
