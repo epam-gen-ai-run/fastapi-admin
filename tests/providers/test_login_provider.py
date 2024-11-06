@@ -54,8 +54,6 @@ async def test_pre_save_admin(provider):
     await provider.pre_save_admin(None, instance, None, None)
     assert instance.password != "new_password"
 
-
-
 @pytest.mark.asyncio
 async def test_logout(provider):
     provider = await provider
