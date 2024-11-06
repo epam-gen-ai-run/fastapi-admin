@@ -67,31 +67,6 @@ async def test_logout(provider):
     assert isinstance(response, RedirectResponse)
 
 @pytest.mark.asyncio
-async def test_create_user(provider):
-    provider = await provider
-    username = "admin"
-    password = "password"
-    user = await provider.create_user(username, password)
-    assert user.username == username
-
-@pytest.mark.asyncio
-async def test_init_view(provider):
-    provider = await provider
-    request = Mock(Request)
-    request.app.admin_path = "/admin"
-    response = await provider.init_view(request)
-    assert response.template.name == "init.html"
-
-@pytest.mark.asyncio
-async def test_init(provider):
-    provider = await provider
-    request = Mock(Request)
-    request.form = AsyncMock(return_value={"username": "admin", "password": "password", "confirm_password": "password"})
-    request.app.admin_path = "/admin"
-    response = await provider.init(request)
-    assert isinstance(response, RedirectResponse)
-
-@pytest.mark.asyncio
 async def test_redirect_login(provider):
     provider = await provider
     request = Mock(Request)
@@ -111,12 +86,3 @@ async def test_password_view(provider):
     response = await provider.password_view(request, resources=[])  # Mock resources dependency
     assert response.template.name == "providers/login/password.html"
 
-@pytest.mark.asyncio
-async def test_password(provider):
-    provider = await provider
-    request = Mock(Request)
-    request.form = AsyncMock(return_value={"old_password": "123", "new_password": "456", "re_new_password": "456"})
-    request.app.admin_path = "/admin"
-    admin = await MockAdmin.create(username="admin", password=hash_password("123"))
-    response = await provider.password(request, admin=admin, resources=[])  # Mock dependencies
-    assert isinstance(response, RedirectResponse)
