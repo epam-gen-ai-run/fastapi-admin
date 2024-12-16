@@ -38,9 +38,8 @@ class FileUpload:
         if file_size > self.max_size:
             raise FileMaxSizeLimit(f"File size {file_size} exceeds max size {self.max_size}")
         if self.allow_extensions:
-            for ext in self.allow_extensions:
-                if filename.endswith(ext):
-                    raise FileExtNotAllowed(
-                        f"File ext {ext} is not allowed of {self.allow_extensions}"
-                    )
+            if not any(filename.endswith(ext) for ext in self.allow_extensions):
+                raise FileExtNotAllowed(
+                    f"File ext {filename.split('.')[-1]} is not allowed. Allowed extensions: {self.allow_extensions}"
+                )
         return await self.save_file(filename, content)
