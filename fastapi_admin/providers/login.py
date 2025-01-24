@@ -188,9 +188,11 @@ class UsernamePasswordProvider(Provider):
         old_password: str = Form(...),
         new_password: str = Form(...),
         re_new_password: str = Form(...),
-        admin: AbstractAdmin = Depends(get_current_admin),
+        admin: AbstractAdmin = None,
         resources=Depends(get_resources),
     ):
+        if admin is None:
+            admin = await get_current_admin(request)
         error = None
         if not check_password(old_password, admin.password):
             error = _("old_password_error")
